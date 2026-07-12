@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Um convite especial...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ff3333; /* Fundo vermelho */
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Animação dos Corações Pretos Caindo */
+        .heart-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .parallax-heart {
+            position: absolute;
+            color: #000000;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+            animation: fallDown linear infinite;
+        }
+
+        @keyframes fallDown {
+            0 {
+                transform: translateY(-10vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% {
+                transform: translateY(105vh) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Card Central */
+        .card {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        /* Configuração das imagens para cores vivas e brilhantes */
+        .card img {
+            max-width: 150px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+            margin-bottom: 20px;
+            filter: contrast(1.1) brightness(1.1);
+            background: transparent;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Botões e Inputs */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-sim, .btn-next {
+            background-color: #ffffff;
+            color: #121212;
+        }
+
+        .btn-sim:hover, .btn-next:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+        }
+
+        .btn-nao {
+            background-color: #ff4d4d;
+            color: white;
+            transition: none;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: #222;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Opções de Comida */
+        .food-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .food-item {
+            padding: 12px;
+            background: #222;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .food-item:hover {
+            background: #2a2a2a;
+        }
+
+        .food-item.selected {
+            border-color: #ffffff;
+            background: #333;
+        }
+
+        .btn-disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        /* Resumo Final */
+        .summary {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .summary p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart-bg" id="heartBg"></div>
+
+    <div class="card active" id="tela1">
+        <img src="https://drive.google.com/thumbnail?sz=w500&id=1EyttNRv6HlytEBVbJ0Z2pQQrGGj8zs_V" alt="Por favor">
+        <h2>VOCÊ ACEITARIA IR A UM DATE COMIGO?</h2>
+        <div class="btn-container" id="containerBotoes">
+            <button class="btn-sim" onclick="proximaTela(1, 2)">SIM</button>
+            <button class="btn-nao" id="btnNao" onclick="fugaBotao(event)">NÃO</button>
+        </div>
+    </div>
+
+    <div class="card" id="tela2">
+        <img src="https://drive.google.com/thumbnail?sz=w500&id=1kNkfG6Jnr0nlvLM6XOlyJgXzxeOLTnuS" alt="Emoji com Rosa">
+        <h2>VOCÊ DISSE SIM? 🥺😭</h2>
+        <div class="btn-container">
+            <button class="btn-next" onclick="proximaTela(2, 3)">PRÓXIMO 🖤</button>
+        </div>
+    </div>
+
+    <div class="card" id="tela3">
+        <h2>📅 QUANDO VOCÊ TÁ LIVRE?</h2>
+        <div class="input-group">
+            <label>SELECIONE A DATA</label>
+            <input type="date" id="dataSelect">
+        </div>
+        <div class="input-group">
+            <label>SELECIONE O HORÁRIO</label>
+            <input type="time" id="horaSelect">
+        </div>
+        <div class="btn-container">
+            <button class="btn-next" onclick="validarDataHora()">SELECIONAR DATA 🖤</button>
+        </div>
+    </div>
+
+    <div class="card" id="tela4">
+        <h2>O QUE TÁ AFIM? 😏</h2>
+        <div class="food-options">
+            <div class="food-item" onclick="selecionarComida(this, '🍔 Hambúrguer')">Hambúrguer 🍔</div>
+            <div class="food-item" onclick="selecionarComida(this, '🍕 Pizza')">Pizza 🍕</div>
+            <div class="food-item" onclick="selecionarComida(this, '🍝 Massas')">Massas 🍝</div>
+            <div class="food-item" onclick="selecionarComida(this, '🍣 Sushi')">Sushi 🍣</div>
+            <div class="food-item" onclick="selecionarComida(this, '🍦 Sorvete/Açaí')">Sorvete/Açaí 🍦</div>
+        </div>
+        <div class="btn-container">
+            <button class="btn-disabled" id="btnComida" onclick="finalizarOpcao()" disabled>ESCOLHE PRIMEIRO 👆</button>
+        </div>
+    </div>
+
+    <div class="card" id="tela5">
+        <img src="https://drive.google.com/thumbnail?sz=w500&id=1rroI899dwHvhc0x6vu2M57IXLehYAvAZ" alt="Pinguim de Madagascar">
+        <h2>TÔ CONTIGO, PRINCESA! 🖤</h2>
+        <div class="summary">
+            <p>📅 <span id="resumoData"></span></p>
+            <p>🕒 <span id="resumoHora"></span></p>
+            <p id="resumoComida"></p>
+        </div>
+    </div>
+
+    <script>
+        let dataSelecionada = "";
+        let horaSelecionada = "";
+        let comidaSelecionada = "";
+
+        // Gerador do Parallax de Corações Pretos (Caindo)
+        const heartBg = document.getElementById('heartBg');
+        const totalHearts = 35;
+
+        for (let i = 0; i < totalHearts; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('parallax-heart');
+            heart.innerHTML = '🖤';
+            heart.style.left = `${Math.random() * 100}%`;
+            heart.style.top = `${Math.random() * -20}vh`;
+            heart.style.fontSize = `${Math.random() * (30 - 15) + 15}px`;
+            heart.style.animationDuration = `${Math.random() * (10 - 5) + 5}s`;
+            heart.style.animationDelay = `${Math.random() * 5}s`;
+            heartBg.appendChild(heart);
+        }
+
+        function proximaTela(atual, proxima) {
+            document.getElementById(`tela${atual}`).classList.remove('active');
+            document.getElementById(`tela${proxima}`).classList.add('active');
+        }
+
+        function fugaBotao(event) {
+            event.stopPropagation();
+            const btnNao = document.getElementById('btnNao');
+            btnNao.style.position = 'fixed';
+            const pad = 30;
+            const x = Math.random() * (window.innerWidth - btnNao.offsetWidth - (pad * 2)) + pad;
+            const y = Math.random() * (window.innerHeight - btnNao.offsetHeight - (pad * 2)) + pad;
+            btnNao.style.left = `${x}px`;
+            btnNao.style.top = `${y}px`;
+        }
+
+        function validarDataHora() {
+            const dataInput = document.getElementById('dataSelect').value;
+            const horaInput = document.getElementById('horaSelect').value;
+
+            if (!dataInput || !horaInput) {
+                alert("Por favor, selecione a data e o horário antes de prosseguir! 😉");
+                return;
+            }
+
+            const dataFormatada = dataInput.split('-').reverse().join('/');
+            dataSelecionada = dataFormatada;
+            horaSelecionada = horaInput;
+
+            proximaTela(3, 4);
+        }
+
+        function selecionarComida(elemento, comidaTexto) {
+            document.querySelectorAll('.food-item').forEach(item => item.classList.remove('selected'));
+            elemento.classList.add('selected');
+            comidaSelecionada = comidaTexto;
+
+            const btnComida = document.getElementById('btnComida');
+            btnComida.innerText = "BORA!";
+            btnComida.className = "btn-next";
+            btnComida.disabled = false;
+        }
+
+        function finalizarOpcao() {
+            document.getElementById('resumoData').innerText = dataSelecionada;
+            document.getElementById('resumoHora').innerText = horaSelecionada;
+            document.getElementById('resumoComida').innerText = comidaSelecionada;
+            proximaTela(4, 5);
+        }
+    </script>
+</body>
+</html>
